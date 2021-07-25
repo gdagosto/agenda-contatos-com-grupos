@@ -1,0 +1,3 @@
+NOME = 0
+TELEFONE = 1
+EMAIL = 2
