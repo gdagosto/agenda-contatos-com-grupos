@@ -7,12 +7,18 @@ class Agenda:
         self.grupos = {}
 
     def listar_contatos(self):
+        for objeto in self.contatos:
+            lista_contato = [objeto.nome+' '+objeto.sobrenome, objeto.id]
+            print(lista_contato)
         pass
 
     def pesquisar_contatos(self):
         pass
 
     def detalhar_contato(self):
+        identificador = int(input('Digite o id do contato:'))
+        contato = self.find_contato_by_id(identificador)
+        print(contato)
         pass
 
     def adicionar_contato(self):
@@ -80,6 +86,8 @@ class Agenda:
             if contato in grupo:
                 grupo.remove(contato)
 
+    def __repr__(self):
+        return (f'Este objeto pertence a classe {Agenda.__name__} e é uma lista de contatos')
     def criar_grupo(self):
         pass
 
@@ -91,3 +99,4 @@ class Agenda:
 
     def executar(self):
         pass
+    
