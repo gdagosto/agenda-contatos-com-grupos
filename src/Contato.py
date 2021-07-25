@@ -1,7 +1,7 @@
 class Contato:
-    curr_id = 1 # valor de Id do contato 
-    
-    def __init__(self,nome,sobrenome = '',emails = [],telefones = []):
+    curr_id = 1  # valor de Id do contato
+
+    def __init__(self, nome, sobrenome='', emails=[], telefones=[]):
         self.id = Contato.curr_id
         self.nome = nome
         self.sobrenome = sobrenome
@@ -9,7 +9,6 @@ class Contato:
         self.telefones = telefones
 
         Contato.curr_id += 1
-
 
     def __repr__(self):
         return f'''id: {self.id} | nome: {self.nome} {self.sobrenome} 
@@ -31,7 +30,7 @@ telefones: {self.telefones}'''
         self.telefones = self.edita_lista(self.telefones, 'Telefones', self.verificar_telefone)
 
     @staticmethod
-    def edita_lista(lista_in,titulo = 'Lista', validacao = ''):
+    def edita_lista(lista_in, titulo='Lista', validacao=''):
         lista_out = lista_in[:]
 
         while True:
@@ -57,6 +56,5 @@ telefones: {self.telefones}'''
                     lista_out.append(novo_item)
             elif inp.isdigit() and 0 <= int(inp) <= len(lista_out):
                 lista_out.pop(int(inp) - 1)
-
 
         return lista_out

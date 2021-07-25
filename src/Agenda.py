@@ -1,4 +1,6 @@
 from src.Contato import Contato
+
+
 class Agenda:
     def __init__(self, contatos):
         self.contatos = contatos
@@ -18,16 +20,16 @@ class Agenda:
         nome = input('Nome: ')
         sobrenome = input('Sobrenome: ')
 
-        novo_contato = Contato(nome,sobrenome)
+        novo_contato = Contato(nome, sobrenome)
 
-        novo_contato.edita_emails() 
+        novo_contato.edita_emails()
         novo_contato.edita_telefones()
 
-        self.contatos.append(novo_contato)        
+        self.contatos.append(novo_contato)
 
-    def find_contato_by_id(self,_id):
+    def find_contato_by_id(self, _id):
         for contato in self.contatos:
-            if contato.id == _id: 
+            if contato.id == _id:
                 return contato
         return
 
@@ -40,16 +42,17 @@ class Agenda:
         if inp.isdigit():
             self.alterar_contato_by_id(int(inp))
 
-
     def alterar_contato_by_id(self, _id):
         contato = self.find_contato_by_id(_id)
         if not(contato):
-            return 
+            return
         novo_nome = input(f'Nome [{contato.nome}]: ')
-        if novo_nome != '': contato.nome = novo_nome
+        if novo_nome != '':
+            contato.nome = novo_nome
 
         novo_sobrenome = input(f'Sobrenome [{contato.sobrenome}]: ')
-        if novo_sobrenome != '': contato.sobrenome = novo_sobrenome
+        if novo_sobrenome != '':
+            contato.sobrenome = novo_sobrenome
 
         contato.edita_emails()
 
@@ -76,7 +79,6 @@ class Agenda:
         for grupo in self.grupos:
             if contato in grupo:
                 grupo.remove(contato)
-
 
     def criar_grupo(self):
         pass
