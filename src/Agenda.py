@@ -83,8 +83,7 @@ class Agenda:
 
         # Remove contato de cada grupo
         for grupo in self.grupos:
-            if contato in grupo:
-                grupo.remove(contato)
+            grupo.remover_contato(contato)
 
     def __repr__(self):
         return (f'Este objeto pertence a classe {Agenda.__name__} e é uma lista de contatos')
