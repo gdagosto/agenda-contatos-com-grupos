@@ -21,8 +21,7 @@ def is_telefone(valor: str) -> bool:
         return False
     if "(" in valor:
         if not(valor.index("(") < valor.index(")")):
-            return False
-    
+            return False    
 
     return True
 

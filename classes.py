@@ -1,7 +1,8 @@
 from __future__ import annotations
 from typing import Dict, List
+from constantes import LIMITE_AGENDA
+import re
 
-LIMITE_AGENDA = 75
 
 class Contato:
     curr_id = 1  # valor de Id do contato
@@ -17,7 +18,6 @@ class Contato:
             raise Exception(f"Limite de contatos ({LIMITE_AGENDA}) na agenda atingido!")
         Contato.curr_id += 1
 
-
     def __repr__(self):
         return f'''id: {self.id} | nome: {self.nome} {self.sobrenome} 
     emails: {self.emails}
@@ -25,11 +25,12 @@ class Contato:
 
     @staticmethod
     def verificar_email(string):
-        return True
+        return re.search(r'^[\w\-\.]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,3}$', string)
 
     @staticmethod
     def verificar_telefone(string):
-        return True
+        return re.search('^(\(?[0-9]{2,3}\)?)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', string)
+
 
     def edita_emails(self):
         self.emails = self.edita_lista(self.emails, 'E-mails', self.verificar_email)
@@ -60,8 +61,9 @@ class Contato:
                 novo_item = input('Digite o valor do novo item: ')
 
                 if validacao == '' or (callable(validacao) and validacao(novo_item)):
-                    print('entrou')
                     lista_out.append(novo_item)
+                else:
+                    print("O dado inserido é inválido!")
             elif inp.isdigit() and 0 <= int(inp) <= len(lista_out):
                 lista_out.pop(int(inp) - 1)
 
@@ -70,25 +72,34 @@ class Contato:
 
 class Agenda:
     def __init__(self, contatos):
-        self.contatos = contatos
+        if len(contatos) > 75:
+            print("O tamanho máximo da Agenda é 75 contatos, foram importados apenas os 75 primeiros.")
+        self.contatos = contatos[:75]
         self.grupos: Dict[str, Grupo] = {}
 
     def listar_contatos(self):
         for objeto in self.contatos:
             lista_contato = [objeto.nome+' '+objeto.sobrenome, objeto.id]
             print(lista_contato)
-        pass
 
     def pesquisar_contatos(self):
         pass
 
     def detalhar_contato(self):
-        identificador = int(input('Digite o id do contato:'))
-        contato = self.find_contato_by_id(identificador)
+        print('Digite o id do contato para detalhar, ou deixe em branco para sair:')
+        identificador = input('    ►')
+        if not identificador.isdigit():
+            return
+        contato = self.find_contato_by_id(int(identificador))
+        if not contato:
+            print("O contato não foi encontrado")
+            return
         print(contato)
-        pass
 
     def adicionar_contato(self):
+        if len(self.contatos) >= 75:
+            print("O tamanho máximo da Agenda é 75 contatos, não se pode adicionar mais contatos.")
+            return
         print(' ADICIONAR CONTATO ')
         nome = input('Nome: ')
         sobrenome = input('Sobrenome: ')
@@ -145,18 +156,20 @@ class Agenda:
         if not(contato):
             return
 
+        print(f"Contato removido: {contato}")
+
         # Remove contato da lista de contatos
         self.contatos.remove(contato)
 
         # Remove contato de cada grupo
-        for grupo in self.grupos:
+        for grupo in self.grupos.values():
             grupo.remover_contato(contato)
 
     def __repr__(self):
         return (f'Este objeto pertence a classe {Agenda.__name__} e é uma lista de contatos')
 
     def criar_grupo(self):
-        #TODO: Consertar o fato de q qdo o ID não existe ele adiciona um NONE
+        # TODO: Consertar o fato de q qdo o ID não existe ele adiciona um NONE
         print(' CRIAR GRUPO ')
         self.listar_contatos()  # Exibe a lista de contatos com os ids
         while True:
@@ -168,14 +181,19 @@ class Agenda:
             while True:
                 print('Digite os ids para adicionar a este grupo (separados por vírgula) ou em branco para sair:')
                 inp = input('    > ')
-                ids = inp.split(",")  # ids recebe uma lista de números gravados como string
-                if not ids:
+                if not inp:
+                    print(f"Grupo {nome_grupo} cancelado!!")
                     break
+                ids = inp.split(",")  # ids recebe uma lista de números gravados como string
                 if all([i.isdigit() for i in ids]):
                     lista_contatos = [self.find_contato_by_id(int(_id)) for _id in ids if _id]
-                    novo_grupo = Grupo(lista_contatos, nome_grupo)
-                    self.grupos[nome_grupo] = novo_grupo
-                    break
+                    if None in lista_contatos:
+                        print("Preencha apenas IDs válidos entre vírgulas.")
+                    else:
+                        novo_grupo = Grupo(lista_contatos)
+                        self.grupos[nome_grupo] = novo_grupo
+                        print(f"Grupo {nome_grupo} criado com sucesso")
+                        break
                 else:  # caso tenha colocado a,2,5,a,charles
                     # TODO: ofender usuário
                     print("Preencha apenas números entre vírgulas, ex: 1,2,3")
@@ -186,16 +204,82 @@ class Agenda:
     def remover_grupo(self):
         pass
 
+    @staticmethod
+    def input_menu_principal() -> str:
+        '''
+            Faz o print da mensagem do menu PRINCIPAL e aguarda input do usuário
+            para que escolha uma das opções, retorna o valor inputado.
+        '''
+        print('''
+        ###################################################################
+        ###            Cadastro Clientes PyCoders - Menu                ###
+        ###################################################################
+
+        Digite sua opção e pressione ENTER: 
+        → 1 para listar contatos, 
+        → 2 para adicionar contato, 
+        → 3 para alterar contato,
+        → 4 para remover contato,
+        → 5 para criar os grupos,
+        → 6 para exibir os contatos dos grupos,
+        → 7 para salvar a agenda,
+        → Digite qualquer outro caracter para sair sem salvar:''')
+        return input("►")
+
     def executar(self):
-        pass
+        '''
+        Faz o loop principal da agenda
+        '''
+        while True:
+            user_input = Agenda.input_menu_principal()
+            
+            if user_input == "1":
+                self.listar_contatos()
+                self.detalhar_contato()
+
+            elif user_input == "2":
+                self.adicionar_contato()
+
+            elif user_input == "3":
+                self.alterar_contato()
+
+            elif user_input == "4":
+                self.remover_contato()
+            
+            elif user_input == "5":
+                self.criar_grupo()
+            
+            elif user_input == "6":
+                while True:
+                    # TODO: Separar em método externo
+                    titulo = "Grupos"
+                    lista_grupos = list(self.grupos.keys())
+                    print('\n\n' + '-'*4 + f'[ {titulo} ]' + '-'*(42-len(titulo)))
+                    if len(lista_grupos) == 0:
+                        print('  Não há itens na lista')
+                    else:
+                        for _id, item in enumerate(lista_grupos):
+                            print(f'  {_id+1}: {item}')
+                    print('-'*50)
+                    if len(lista_grupos) > 0:
+                        print('Digite o número correspondente para removê-lo da lista')
+                    print('Deixe em branco e aperte Enter para sair')
+                    inp = input('    > ')
+                    if inp == '':
+                        break
+                    elif inp.isdigit() and 0 <= int(inp) <= len(lista_grupos):
+                        print(self.grupos[lista_grupos[int(inp)-1]])
+            # → 6 para salvar a agenda,
+            elif user_input == "7":
+                pass
+            else:
+                break
 
 
 class Grupo:
-    #    grupos: Dict[str, Grupo] = {}
 
-    def __init__(self, contatos: List[Contato], nome: str):
+    def __init__(self, contatos: List[Contato]):
         self.contatos = contatos
-        #Grupo.grupos[nome] = self
 
     def __repr__(self) -> str:
         repr = ""
