@@ -156,6 +156,8 @@ class Agenda:
         if not(contato):
             return
 
+        #BLOOD
+
         print(f"Contato removido: {contato}")
 
         # Remove contato da lista de contatos
