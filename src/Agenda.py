@@ -16,9 +16,18 @@ class Agenda:
         '''
         Método exibe cada contato com o nome, sobrenome e id único
         '''
-        for objeto in self.contatos:
-            lista_contato = [objeto.nome+' '+objeto.sobrenome, objeto.id]
-            print(lista_contato)
+        titulo = "Contatos"
+        print('\n\n' + '-'*4 +
+                f'[ {titulo} ]' + '-'*(42-len(titulo)))
+        if len(self.contatos) == 0:
+            print('  Não há itens na lista')
+        else:
+            for contato in self.contatos:
+                print(f'  id: {str(contato.id).rjust(2)} | {contato.nome} {contato.sobrenome}')
+        print('-'*50)
+        # for objeto in self.contatos:
+        #     lista_contato = [objeto.nome+' '+objeto.sobrenome, objeto.id]
+        #     print(lista_contato)
 
     def detalhar_contato(self)->None:
         '''

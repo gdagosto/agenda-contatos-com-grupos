@@ -43,10 +43,8 @@ telefones: {str(self.telefones).strip("[]").replace("'","")}'''
         #return bool(re.search(r'^(\(?[0-9]{2,3}\)?)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', string))
         return bool(re.search(r'''^(\(?[0-9]{2,3}\)?)? # começa ou não com o DDD, podendo ter parenteses ou não e 2 ou 3 dígitos
                                 \ ? # um espaço ou não
-                                (?:[2-8]|9[1-9]) # necessariamente um grupo contendo (um caracter entre 2 e 8) OU (necessariamente um 9 e um caracter entre 1 e 9)
-                                                 # ou seja, primeiro caso para fone fixo, segundo caso para fone celular
-                                [0-9]{3} # em seguida, 3 números
-                                \-? # tracinho ou não
+                                [0-9]{4,5} # em seguida, 4 ou 5 números
+                                \-?\ ? # tracinho ou não
                                 [0-9]{4}$ # termina com 4 números''', string, re.VERBOSE))
 
     def edita_emails(self) -> None:
