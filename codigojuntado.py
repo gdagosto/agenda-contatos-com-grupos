@@ -27,7 +27,7 @@ def organiza_lista(lista_vazia: List[List[str]]) -> List[List[str]]:
                 for campo in linha:
                     coluna = verificacoes.identifica_coluna(campo)
                     if coluna in [NOME, TELEFONE, EMAIL]:
-                        lista_vazia[coluna].append(campo)
+                        lista_vazia[coluna].append(campo)   
         lista_preenchida = lista_vazia  # somente para facilitar a leitura
         return lista_preenchida
     except FileNotFoundError:
