@@ -7,7 +7,10 @@ import src.verificacoes as verificacoes
 
 class PyCodersClientes:
     @staticmethod
-    def carrega_arquivo_csv(nome_arquivo):
+    def carrega_arquivo_csv(nome_arquivo:str):
+        '''
+        Método que carrega o arquivo csv e retorna um grupo
+        '''
         with open(nome_arquivo, 'r', encoding='utf-8') as file_inicial:
             tabela_suja = csv.reader(file_inicial, delimiter=";", lineterminator="\n")
 
@@ -66,6 +69,10 @@ class PyCodersClientes:
                 coluna = verificacoes.identifica_coluna(campo)
                 if coluna in [NOME, TELEFONE, EMAIL]:
                     listas[coluna].append(campo)   
+                else:
+                    print(campo)
+
+        
         return list(zip(*listas))
     
     @staticmethod
