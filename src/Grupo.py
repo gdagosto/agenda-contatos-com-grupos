@@ -6,7 +6,7 @@ from src.Contato import Contato
 
 class Grupo:
 
-    def __init__(self, nome, contatos: List[Contato]):
+    def __init__(self, nome: str, contatos: List[Contato]):
         self.contatos = contatos
         self.nome = nome
 
@@ -18,6 +18,3 @@ class Grupo:
         for c in self.contatos:
             representacao += c.__repr__() + "\n\n"
         return representacao
-
-
-#print(self.grupos[lista_grupos[int(inp)-1]])

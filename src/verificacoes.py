@@ -18,16 +18,10 @@ def is_nome(valor: str) -> bool:
     return valida_caracteres_validos(valor, caracteres_validos)
 
 def identifica_coluna(valor: str) -> int:
-    if Contato.verificar_telefone(valor): return TELEFONE
-    if Contato.verificar_email(valor): return EMAIL
-    if is_nome(valor): return NOME
+    if Contato.verificar_telefone(valor):
+        return TELEFONE
+    if Contato.verificar_email(valor):
+        return EMAIL
+    if is_nome(valor):
+        return NOME
     return -1
-
-
-# def retorna_indices_na_lista(buscado: str, coluna_lista_in: List[str]) -> List[int]:
-#     '''
-#        A partir de uma lista[str] e um valor buscado, retorna uma lista[int] com 
-#        todos os indices da lista[str] em que o valor buscado está presente
-#     '''
-#     buscado = buscado.lower()
-#     return [i for i, valor in enumerate(coluna_lista_in) if buscado in valor.lower()]
