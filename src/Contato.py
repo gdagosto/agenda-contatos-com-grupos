@@ -3,11 +3,10 @@ from typing import List
 from src.constantes import LIMITE_AGENDA, DELIMITER
 import re
 
-
 class Contato:
     curr_id = 1  # valor de Id do contato
 
-    def __init__(self, nome:str, sobrenome:str='', emails:List[str]=[], telefones:List[str]=[]):
+    def __init__(self, nome: str, sobrenome: str = '', emails: List[str] = [], telefones: List[str] = []):
         self.id = Contato.curr_id
         self.nome = nome
         self.sobrenome = sobrenome
@@ -40,7 +39,6 @@ telefones: {str(self.telefones).strip("[]").replace("'","")}'''
         '''
         Método verifica se o telefone é válido
         '''
-        #return bool(re.search(r'^(\(?[0-9]{2,3}\)?)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$', string))
         return bool(re.search(r'''^(\(?[0-9]{2,3}\)?)? # começa ou não com o DDD, podendo ter parenteses ou não e 2 ou 3 dígitos
                                 \ ? # um espaço ou não
                                 [0-9]{4,5} # em seguida, 4 ou 5 números
@@ -49,29 +47,33 @@ telefones: {str(self.telefones).strip("[]").replace("'","")}'''
 
     def edita_emails(self) -> None:
         '''
-        Método receberá atribuirá ao atributo "emails" uma lista de e-mails adicionada pelo usuário
+        Método atribuirá ao atributo "emails" uma lista de e-mails adicionada pelo usuário
         '''
         self.emails = self.edita_lista(
             self.emails, 'E-mails', self.verificar_email)
 
     def edita_telefones(self) -> None:
         '''
-        Método receberá atribuirá ao atributo "emails" uma lista de e-mails adicionada pelo usuário
+        Método atribuirá ao atributo "emails" uma lista de e-mails adicionada pelo usuário
         '''
         self.telefones = self.edita_lista(
             self.telefones, 'Telefones', self.verificar_telefone)
 
-    def para_lista(self) -> List[str]:
+    def para_lista_contato(self) -> List[str]:
+        '''
+        Função pega os atributos do objeto Contato (nome+sobrenome, emails e telefones) e cria
+        uma lista com esses dados
+        '''
         nome = self.nome + DELIMITER + self.sobrenome if self.sobrenome else self.nome
         telefones = DELIMITER.join(self.telefones)
         emails = DELIMITER.join(self.emails)
-        return [nome,telefones,emails]
-        
+        return [nome, telefones, emails]
 
     @staticmethod
     def edita_lista(lista_in: List[str], titulo: str = 'Lista', validacao: bool = '') -> List[str]:
         '''
-        Função que recebe uma lista, exibe ela, dá opção ao usuário de acionar ou remover um item da lista
+        Função que recebe uma lista, exibe ela, dá opção ao usuário de acionar ou remover um item da lista.
+        Retorna uma lista editada ou não
         '''
         lista_out: List[str] = lista_in[:]
 

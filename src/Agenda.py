@@ -5,31 +5,29 @@ from src.Grupo import Grupo
 import csv
 
 class Agenda:
-    def __init__(self, contatos:Contato, grupos:Dict[str,Grupo] = {})->None:
+    def __init__(self, contatos: List[Contato], grupos: Dict[str, Grupo] = {}) -> None:
         if len(contatos) > 75:
             print(
                 "O tamanho máximo da Agenda é 75 contatos, foram importados apenas os 75 primeiros.")
         self.contatos = contatos[:75]
         self.grupos = grupos
 
-    def listar_contatos(self)->None:
+    def listar_contatos(self) -> None:
         '''
         Método exibe cada contato com o nome, sobrenome e id único
         '''
         titulo = "Contatos"
         print('\n\n' + '-'*4 +
-                f'[ {titulo} ]' + '-'*(42-len(titulo)))
+              f'[ {titulo} ]' + '-'*(42-len(titulo)))
         if len(self.contatos) == 0:
             print('  Não há itens na lista')
         else:
             for contato in self.contatos:
-                print(f'  id: {str(contato.id).rjust(2)} | {contato.nome} {contato.sobrenome}')
+                print(
+                    f'  id: {str(contato.id).rjust(2)} | {contato.nome} {contato.sobrenome}')
         print('-'*50)
-        # for objeto in self.contatos:
-        #     lista_contato = [objeto.nome+' '+objeto.sobrenome, objeto.id]
-        #     print(lista_contato)
 
-    def detalhar_contato(self)->None:
+    def detalhar_contato(self) -> None:
         '''
         Método que recebe do usuário um input de ID e printa todos os dados do contato (id, nome, sobrenome, email,telefones)
         '''
@@ -43,10 +41,10 @@ class Agenda:
             return
         print(contato)
 
-    def adicionar_contato(self)->None:
+    def adicionar_contato(self) -> None:
         '''
         Método que recebe um input obrigatório de nome e sobrenome do usuário e cria um objeto contato.
-        Além disso ele dá a opção dele adicionar telefones e e-mail.
+        Além disso é dada a opção de adicionar telefones e e-mail.
         
         '''
         if len(self.contatos) >= 75:
@@ -64,7 +62,7 @@ class Agenda:
 
         self.contatos.append(novo_contato)
 
-    def find_contato_by_id(self, _id:int) -> Contato:
+    def find_contato_by_id(self, _id: int) -> Contato:
         '''
         Método que recebe um ID e retorna um objeto Contato, caso ele esteja na lista de contatos. Se não ele retorna none.
         '''
@@ -73,7 +71,7 @@ class Agenda:
                 return contato
         return
 
-    def alterar_contato(self)->None:
+    def alterar_contato(self) -> None:
         '''
         Método que permite ao usuário alterar um contato a partir de um input dele de ID
         '''
@@ -85,7 +83,7 @@ class Agenda:
         if inp.isdigit():
             self.alterar_contato_by_id(int(inp))
 
-    def alterar_contato_by_id(self, _id:int)->None:
+    def alterar_contato_by_id(self, _id: int) -> None:
         '''
         Método que permite o usuário alterar os atributos de um contato a partir de um ID
         '''
@@ -104,7 +102,7 @@ class Agenda:
 
         contato.edita_telefones()
 
-    def remover_contato(self)->None:
+    def remover_contato(self) -> None:
         '''
         Método que recebe um input de ID do usuário e remove um contato da agenda a partir desse ID
         '''
@@ -116,7 +114,7 @@ class Agenda:
         if inp.isdigit():
             self.remover_contato_by_id(int(inp))
 
-    def remover_contato_by_id(self, _id:int)->None:
+    def remover_contato_by_id(self, _id: int) -> None:
         '''
         Método recebe um input de ID e remove o contato da lista de contatos.
         Além disso ele verifica se o contato está presente em algum grupo e também o remove do grupo
@@ -132,13 +130,12 @@ class Agenda:
 
         # Remove contato de cada grupo
         for grupo in self.grupos.values():
-            grupo.remover_contato(contato)
+            grupo.contatos.remove(contato)
 
-    def criar_grupo(self)->None:
+    def criar_grupo(self) -> None:
         '''
         Método de cria os grupos a partir de inputs de ID dos usuários que ele deseja adicionar no grupo
         '''
-        # TODO: Consertar o fato de q qdo o ID não existe ele adiciona um NONE
         print(' CRIAR GRUPO ')
         self.listar_contatos()  # Exibe a lista de contatos com os ids
         while True:
@@ -162,12 +159,11 @@ class Agenda:
                     if None in lista_contatos:
                         print("Preencha apenas IDs válidos entre vírgulas.")
                     else:
-                        novo_grupo = Grupo(nome_grupo,lista_contatos)
+                        novo_grupo = Grupo(nome_grupo, lista_contatos)
                         self.grupos[nome_grupo] = novo_grupo
                         print(f"Grupo {nome_grupo} criado com sucesso")
                         break
                 else:  # caso tenha colocado a,2,5,a,charles
-                    # TODO: ofender usuário
                     print("Preencha apenas números entre vírgulas, ex: 1,2,3")
 
     @staticmethod
@@ -193,10 +189,19 @@ class Agenda:
         return input("►")
 
     def para_lista(self) -> List[List[str]]:
-        # TODO fazer a docstring
-        
-        lista_contatos = []
-        contatos_grupos: Dict[int,List[str]] = {}
+        '''
+        Função pega os valores de cada grupo (lista de objetos Contato) e cria um dicionário com o ID
+        de cada contato e o nome do grupo que ele pertence. Ela faz isso para grupo e adiciona nos valores
+        desse dicionário, que é vinculado ao ID único de cada usuário, o nome dos grupos que ele percente.
+
+        Depois ela pega cada contato, chamada uma função que quebra o objeto Contato em uma lista de strings
+        com os atributos sendo as strings dessa lista e junta essa lista com os valores do dicionário com os nomes
+        dos grupos que cada contato participa. Para adicionar uma lista de strings com os valores do dicionário
+        é necessário transformar os valores do dicionário em uma lista.
+        '''
+
+        lista_contatos: List[List[str]] = []
+        contatos_grupos: Dict[int, str] = {}
 
         for contato in self.contatos:
             contatos_grupos[contato.id] = ''
@@ -206,17 +211,15 @@ class Agenda:
                 if contatos_grupos[contato.id] != '':
                     contatos_grupos[contato.id] += DELIMITER
                 contatos_grupos[contato.id] += grupo.nome
-                
+
         for contato in self.contatos:
-            serialized_contato = contato.para_lista() # [nome,emails,telefones]
+            serialized_contato = contato.para_lista_contato()
             linha = serialized_contato + [contatos_grupos[contato.id]]
             lista_contatos.append(linha)
 
         return lista_contatos
 
-
-
-    def executar(self):
+    def executar(self) -> None:
         '''
         Faz o loop principal da agenda
         '''
@@ -241,7 +244,6 @@ class Agenda:
 
             elif user_input == "6":
                 while True:
-                    # TODO: Separar em método externo
                     titulo = "Grupos"
                     lista_grupos = list(self.grupos.keys())
                     print('\n\n' + '-'*4 +
@@ -254,19 +256,19 @@ class Agenda:
                     print('-'*50)
                     if len(lista_grupos) > 0:
                         print(
-                            'Digite o número correspondente detalhá-lo') #essa linha mudou para não dizer "remover"
+                            'Digite o número correspondente para detalhá-lo')  # essa linha mudou para não dizer "remover"
                     print('Deixe em branco e aperte Enter para sair')
                     inp = input('    > ')
                     if inp == '':
                         break
                     elif inp.isdigit() and 0 <= int(inp) <= len(lista_grupos):
                         print(self.grupos[lista_grupos[int(inp)-1]])
-            elif user_input == "7": # Salvar
+            elif user_input == "7":  # Salvar
                 lista_out = self.para_lista()
                 with open(NOME_ARQUIVO, 'w', encoding='utf-8') as arquivo_out:
                     csv.writer(arquivo_out, delimiter=";",
-                            lineterminator="\n").writerows(lista_out)
+                               lineterminator="\n").writerows(lista_out)
                 print(f'Dados salvos com sucesso no arquivo {NOME_ARQUIVO}')
-                                
+
             else:
                 break

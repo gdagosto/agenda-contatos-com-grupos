@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import List
 from src.Contato import Contato
 
-
-
 class Grupo:
 
     def __init__(self, nome: str, contatos: List[Contato]):
@@ -18,6 +16,3 @@ class Grupo:
         for c in self.contatos:
             representacao += c.__repr__() + "\n\n"
         return representacao
-
-
-#print(self.grupos[lista_grupos[int(inp)-1]])
