@@ -6,7 +6,7 @@ from src.Contato import Contato
 
 class Grupo:
 
-    def __init__(self, nome, contatos: List[Contato]):
+    def __init__(self, nome: str, contatos: List[Contato]):
         self.contatos = contatos
         self.nome = nome
 

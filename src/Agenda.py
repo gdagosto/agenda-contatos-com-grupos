@@ -254,7 +254,7 @@ class Agenda:
                     print('-'*50)
                     if len(lista_grupos) > 0:
                         print(
-                            'Digite o número correspondente para removê-lo da lista')
+                            'Digite o número correspondente detalhá-lo') #essa linha mudou para não dizer "remover"
                     print('Deixe em branco e aperte Enter para sair')
                     inp = input('    > ')
                     if inp == '':
